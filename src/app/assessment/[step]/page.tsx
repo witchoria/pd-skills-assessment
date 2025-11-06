@@ -217,9 +217,7 @@ export default function AssessmentStep() {
       <aside
         className="border-l-4 border-border bg-card-bg"
         style={{
-          position: 'sticky',
           top: 0,
-          height: '100vh',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
@@ -231,6 +229,7 @@ export default function AssessmentStep() {
           className="p-4 bg-button-bg text-button-text font-bold hover:bg-text hover:text-bg transition-colors"
           style={{
             display: 'flex',
+            padding:'16px',
             alignItems: 'center',
             justifyContent: isGuideExpanded ? 'space-between' : 'center',
             minHeight: '64px',
@@ -280,10 +279,17 @@ export default function AssessmentStep() {
                   className="border-2 border-border bg-bg hover:bg-hover transition-colors"
                   style={{ padding: 'clamp(12px, 1.5vw, 16px)' }}
                 >
-                  <div className="flex items-baseline gap-2 mb-2">
-                    <span className="text-2xl font-bold text-text">
+                  <div className="flex items-center mb-2" style={{ gap: 'clamp(12px, 1.67vw, 16px)' }}>
+                    <div
+                      className="flex items-center justify-center border-2 border-border bg-bg text-text font-bold"
+                      style={{
+                        width: 'clamp(24px, 3.33vw, 32px)',
+                        height: 'clamp(24px, 3.33vw, 32px)',
+                        fontSize: 'clamp(1rem, 1.5vw, 1.5rem)',
+                      }}
+                    >
                       {score}
-                    </span>
+                    </div>
                     <span className="text-lg font-semibold text-text">
                       {label}
                     </span>
