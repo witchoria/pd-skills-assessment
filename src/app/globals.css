@@ -167,3 +167,35 @@ input[type="range"]:focus::-webkit-slider-thumb {
 input[type="range"]:focus::-moz-range-thumb {
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
 }
+
+/* Button utility class */
+.btn {
+  background-color: var(--color-button-bg);
+  color: var(--color-button-text);
+  padding: clamp(6px, 0.83vw, 8px) clamp(12px, 1.67vw, 16px);
+  border-radius: clamp(6px, 0.83vw, 8px);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn:hover {
+  background-color: var(--color-hover);
+  color: var(--color-text);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+  background-color: var(--color-button-bg);
+  color: var(--color-button-text);
+}

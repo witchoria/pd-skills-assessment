@@ -61,7 +61,7 @@ export function RadarChart({ data }: RadarChartProps) {
   };
 
   return (
-    <div className="border-4 border-border bg-card-bg p-fluid-md">
+    <div>
       <svg
         viewBox={`0 0 ${size} ${size}`}
         className="w-full h-auto"

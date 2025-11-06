@@ -18,9 +18,9 @@ export default function Home() {
         <div className="mt-[clamp(24px,2.22vw,57px)]">
           <Link
             href="/assessment/1"
-            className="inline-block bg-button-bg text-button-text px-16 py-4 font-bold text-2xl hover:bg-text hover:text-bg transition-all"
+            className="btn"
           >
-            Start
+            Start assessment
           </Link>
         </div>
       </div>

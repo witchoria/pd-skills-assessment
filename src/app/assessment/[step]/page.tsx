@@ -188,7 +188,7 @@ export default function AssessmentStep() {
         >
           <button
             onClick={handlePrevious}
-            className="px-8 py-3 border-4 border-border bg-bg text-text font-bold text-sm uppercase tracking-wider hover:bg-hover transition-colors"
+            className="btn"
           >
             Back
           </button>
@@ -200,13 +200,7 @@ export default function AssessmentStep() {
           <button
             onClick={handleNext}
             disabled={!allRated}
-            className={`
-              px-8 py-3 border-4 font-bold text-sm uppercase tracking-wider transition-all
-              ${allRated
-                ? 'bg-button-bg text-button-text border-border hover:bg-text hover:text-bg cursor-pointer'
-                : 'bg-hover text-muted border-muted cursor-not-allowed'
-              }
-            `}
+            className="btn"
           >
             Next
           </button>

@@ -98,44 +98,28 @@ export default function ResultsPage() {
   }));
 
   return (
-    <div className="min-h-screen p-6 lg:p-fluid-xl">
+    <div className="min-h-screen" style={{ padding: 'clamp(32px, 6.67vw, 64px)' }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <header className="mb-fluid-2xl">
-          <h1 className="text-fluid-h1 font-bold mb-fluid-md border-b-8 border-border pb-fluid-sm">
-            Your Assessment Results
+        <header className="mb-fluid-2xl text-center">
+          <h1 className="font-header text-[clamp(80px,13.9vw,356px)] font-bold text-text leading-[0.9]">
+            your aura
           </h1>
-          <p className="text-fluid-body text-muted">
-            Below is a summary of your self-assessment across all 13 competencies.
-          </p>
         </header>
 
         {/* Radar Chart */}
-        <section className="mb-fluid-2xl">
-          <h2 className="text-fluid-h3 font-bold mb-fluid-md border-l-8 border-border pl-fluid-sm">
-            Competency Overview
-          </h2>
+        <section style={{ marginBottom: 'clamp(24px, 3.33vw, 32px)' }}>
           <RadarChart data={chartData} />
         </section>
 
         {/* Results Table */}
-        <section className="mb-fluid-2xl">
-          <h2 className="text-fluid-h3 font-bold mb-fluid-md border-l-8 border-border pl-fluid-sm">
-            Detailed Scores
+        <section style={{ marginBottom: 'clamp(24px, 3.33vw, 32px)' }}>
+          <h2 className="font-body text-2xl font-bold text-text mb-4">
+            Results
           </h2>
 
-          <div className="border-4 border-border bg-card-bg overflow-x-auto">
+          <div className="border-2 border-border bg-card-bg overflow-x-auto" style={{ borderRadius: 'clamp(12px, 1.67vw, 16px)' }}>
             <table className="w-full">
-              <thead>
-                <tr className="border-b-4 border-border bg-button-bg text-button-text">
-                  <th className="text-left p-fluid-sm font-bold uppercase tracking-wider">
-                    Competency
-                  </th>
-                  <th className="text-right p-fluid-sm font-bold uppercase tracking-wider w-32">
-                    Average Score
-                  </th>
-                </tr>
-              </thead>
               <tbody>
                 {competencyScores.map((competency, index) => (
                   <tr
@@ -158,24 +142,24 @@ export default function ResultsPage() {
         </section>
 
         {/* Actions */}
-        <section className="flex flex-col sm:flex-row gap-4 justify-between items-center border-t-4 border-border pt-fluid-lg">
+        <section className="flex flex-col sm:flex-row gap-4 justify-between items-center border-t-4 border-border" style={{ paddingTop: 'clamp(24px, 3.33vw, 32px)', marginBottom: 'clamp(24px, 3.33vw, 32px)' }}>
           <button
             onClick={() => router.push('/')}
-            className="px-fluid-lg py-fluid-sm border-4 border-border bg-bg text-text font-bold text-fluid-body uppercase tracking-wider hover:bg-hover transition-all w-full sm:w-auto"
+            className="btn w-full sm:w-auto"
           >
-            Back to Home
+            Back to home
           </button>
 
           <button
             onClick={handleDownloadCSV}
-            className="px-fluid-lg py-fluid-sm border-4 border-border bg-button-bg text-button-text font-bold text-fluid-body uppercase tracking-wider hover:bg-text hover:text-bg transition-all w-full sm:w-auto"
+            className="btn w-full sm:w-auto"
           >
-            Download Results as CSV
+            Download results as CSV
           </button>
         </section>
 
         {/* Footer Note */}
-        <footer className="mt-fluid-xl text-center">
+        <footer className="text-center">
           <p className="text-fluid-small text-muted">
             Your results are saved locally in your browser. To retake the assessment, clear your responses from the home page.
           </p>
