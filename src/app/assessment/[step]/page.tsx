@@ -17,6 +17,9 @@ export default function AssessmentStep() {
   // Local state for current ratings
   const [ratings, setRatings] = useState<Record<string, number>>({});
 
+  // Scoring guide panel state
+  const [isGuideExpanded, setIsGuideExpanded] = useState(true);
+
   // Redirect if invalid step
   useEffect(() => {
     if (step < 1 || step > 13 || !competency) {
@@ -85,106 +88,215 @@ export default function AssessmentStep() {
   const progressPercentage = (step / 13) * 100;
 
   return (
-    <div className="min-h-screen flex flex-col p-8 lg:p-12">
-      {/* Header Section */}
-      <div className="mb-8">
-        <p className="text-sm font-mono text-muted uppercase tracking-wider mb-2">
-          Skill {step} of 13
-        </p>
-        <h1 className="text-fluid-skill-title font-header font-bold text-text lowercase">
-          {competency.name}
-        </h1>
-      </div>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: isGuideExpanded ? '1fr clamp(320px, 25vw, 400px)' : '1fr 48px',
+        minHeight: '100vh',
+        backgroundColor: 'var(--color-bg)',
+        transition: 'grid-template-columns 300ms ease-out',
+      }}
+    >
+      {/* Main Content Area - Left */}
+      <div
+        style={{
+          padding: 'clamp(24px, 3vw, 48px)',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        {/* Header Section */}
+        <div style={{ marginBottom: 'var(--space-lg)' }}>
+          <p className="text-sm font-mono text-muted uppercase tracking-wider mb-2">
+            Skill {step} of 13
+          </p>
+          <h1 className="text-fluid-skill-title font-header font-bold text-text lowercase">
+            {competency.name}
+          </h1>
+        </div>
 
-      {/* Progress Bar */}
-      <div className="mb-12">
-        <div className="h-4 bg-card-bg border-2 border-border overflow-hidden">
-          <div
-            className="h-full bg-button-bg transition-all duration-500 ease-out"
-            style={{ width: `${progressPercentage}%` }}
-          />
+        {/* Progress Bar */}
+        <div style={{ marginBottom: 'var(--space-xl)' }}>
+          <div className="h-4 bg-card-bg border-2 border-border overflow-hidden">
+            <div
+              className="h-full bg-button-bg transition-all duration-500 ease-out"
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Rating Blocks */}
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--space-lg)',
+          }}
+        >
+          {competency.statements.map((statement, index) => {
+            const currentRating = ratings[statement.id] || 1;
+            const ratingLabel = SCORING_GUIDE[currentRating as keyof typeof SCORING_GUIDE]?.label || SCORING_GUIDE[1].label;
+
+            return (
+              <div
+                key={statement.id}
+                className="border-4 border-border bg-card-bg"
+                style={{ padding: 'clamp(20px, 2.5vw, 32px)' }}
+              >
+                {/* Statement Text */}
+                <p className="text-base leading-relaxed text-text mb-6">
+                  {statement.text}
+                </p>
+
+                {/* Rating Label */}
+                <p className="text-lg font-bold text-text mb-4">
+                  Rating: {currentRating} - {ratingLabel}
+                </p>
+
+                {/* Slider with Labels */}
+                <div className="relative">
+                  <input
+                    type="range"
+                    min="1"
+                    max="5"
+                    step="1"
+                    value={currentRating}
+                    onChange={(e) => handleRating(statement.id, parseInt(e.target.value))}
+                    className="w-full h-3 bg-hover border-2 border-border appearance-none cursor-pointer slider-thumb"
+                    aria-label={`Rate statement ${index + 1}`}
+                  />
+
+                  {/* Labels Below Slider */}
+                  <div className="flex justify-between mt-2 text-xs text-muted font-mono">
+                    <span>1 - {SCORING_GUIDE[1].label}</span>
+                    <span>5 - {SCORING_GUIDE[5].label}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Navigation Footer */}
+        <div
+          className="flex items-center justify-between border-t-4 border-border"
+          style={{
+            marginTop: 'var(--space-xl)',
+            paddingTop: 'var(--space-lg)',
+          }}
+        >
+          <button
+            onClick={handlePrevious}
+            className="px-8 py-3 border-4 border-border bg-bg text-text font-bold text-sm uppercase tracking-wider hover:bg-hover transition-colors"
+          >
+            Back
+          </button>
+
+          <p className="text-lg font-bold text-text font-mono">
+            {step}/13
+          </p>
+
+          <button
+            onClick={handleNext}
+            disabled={!allRated}
+            className={`
+              px-8 py-3 border-4 font-bold text-sm uppercase tracking-wider transition-all
+              ${allRated
+                ? 'bg-button-bg text-button-text border-border hover:bg-text hover:text-bg cursor-pointer'
+                : 'bg-hover text-muted border-muted cursor-not-allowed'
+              }
+            `}
+          >
+            Next
+          </button>
         </div>
       </div>
 
-      {/* Rating Blocks */}
-      {/* Rating Blocks */}
-<div className="flex-1" style={{ 
-  padding: 'clamp(32px, 4.44vw, 64px)',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 'clamp(16px, 2.22vw, 32px)'
-}}>
-        {competency.statements.map((statement, index) => {
-          const currentRating = ratings[statement.id] || 1;
-          const ratingLabel = SCORING_GUIDE[currentRating as keyof typeof SCORING_GUIDE]?.label || SCORING_GUIDE[1].label;
+      {/* Scoring Guide Panel - Right */}
+      <aside
+        className="border-l-4 border-border bg-card-bg"
+        style={{
+          position: 'sticky',
+          top: 0,
+          height: '100vh',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        {/* Toggle Button */}
+        <button
+          onClick={() => setIsGuideExpanded(!isGuideExpanded)}
+          className="p-4 bg-button-bg text-button-text font-bold hover:bg-text hover:text-bg transition-colors"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: isGuideExpanded ? 'space-between' : 'center',
+            minHeight: '64px',
+          }}
+          aria-expanded={isGuideExpanded}
+          aria-controls="scoring-guide-content"
+        >
+          {isGuideExpanded ? (
+            <>
+              <span className="text-xl font-header uppercase">Scoring Guide</span>
+              <span
+                className="text-2xl transition-transform duration-300 ease-out"
+                style={{ transform: 'rotate(0deg)' }}
+              >
+                ▶
+              </span>
+            </>
+          ) : (
+            <span
+              className="text-xl font-header uppercase"
+              style={{
+                writingMode: 'vertical-rl',
+                transform: 'rotate(180deg)',
+              }}
+            >
+              Scoring Guide
+            </span>
+          )}
+        </button>
 
-          return (
-            <div
-  key={statement.id}
-  className="border-4 border-border bg-card-bg"
-  style={{ padding: 'clamp(20px, 2.22vw, 32px)' }}
->
-              {/* Statement Text */}
-              <p className="text-base leading-relaxed text-text mb-6">
-                {statement.text}
-              </p>
-
-              {/* Rating Label */}
-              <p className="text-lg font-bold text-text mb-4">
-                Rating: {currentRating} - {ratingLabel}
-              </p>
-
-              {/* Slider with Labels */}
-              <div className="relative">
-                <input
-                  type="range"
-                  min="1"
-                  max="5"
-                  step="1"
-                  value={currentRating}
-                  onChange={(e) => handleRating(statement.id, parseInt(e.target.value))}
-                  className="w-full h-3 bg-hover border-2 border-border appearance-none cursor-pointer slider-thumb"
-                  aria-label={`Rate statement ${index + 1}`}
-                />
-
-                {/* Labels Below Slider */}
-                <div className="flex justify-between mt-2 text-xs text-muted font-mono">
-                  <span>1 - {SCORING_GUIDE[1].label}</span>
-                  <span>5 - {SCORING_GUIDE[5].label}</span>
+        {/* Scoring Guide Content */}
+        <div
+          id="scoring-guide-content"
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            opacity: isGuideExpanded ? 1 : 0,
+            transition: 'opacity 300ms ease-out',
+            padding: isGuideExpanded ? 'clamp(16px, 2vw, 24px)' : 0,
+          }}
+        >
+          {isGuideExpanded && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
+              {Object.entries(SCORING_GUIDE).map(([score, { label, description }]) => (
+                <div
+                  key={score}
+                  className="border-2 border-border bg-bg hover:bg-hover transition-colors"
+                  style={{ padding: 'clamp(12px, 1.5vw, 16px)' }}
+                >
+                  <div className="flex items-baseline gap-2 mb-2">
+                    <span className="text-2xl font-bold text-text">
+                      {score}
+                    </span>
+                    <span className="text-lg font-semibold text-text">
+                      {label}
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted leading-snug">
+                    {description}
+                  </p>
                 </div>
-              </div>
+              ))}
             </div>
-          );
-        })}
-      </div>
-
-      {/* Navigation Footer */}
-      <div className="flex items-center justify-between pt-8 border-t-4 border-border">
-        <button
-          onClick={handlePrevious}
-          className="px-8 py-3 border-4 border-border bg-bg text-text font-bold text-sm uppercase tracking-wider hover:bg-hover transition-colors"
-        >
-          Back
-        </button>
-
-        <p className="text-lg font-bold text-text font-mono">
-          {step}/13
-        </p>
-
-        <button
-          onClick={handleNext}
-          disabled={!allRated}
-          className={`
-            px-8 py-3 border-4 font-bold text-sm uppercase tracking-wider transition-all
-            ${allRated
-              ? 'bg-button-bg text-button-text border-border hover:bg-text hover:text-bg cursor-pointer'
-              : 'bg-hover text-muted border-muted cursor-not-allowed'
-            }
-          `}
-        >
-          Next
-        </button>
-      </div>
+          )}
+        </div>
+      </aside>
     </div>
   );
 }
